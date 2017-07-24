@@ -14,14 +14,39 @@ import { Component } from "@angular/core/";
   templateUrl: 'home.html'
 })
 export class HomePage {
- constructor(private googleMaps: GoogleMaps) {}
+  mapOptions(arg0: any, arg1: any): any {
+    throw new Error("Method not implemented.");
+  }
+  map: GoogleMap;
+  mapElement: HTMLElement;
+  constructor(private googleMaps: GoogleMaps) { }
 
 // Load map only after view is initialized
 ngAfterViewInit() {
  this.loadMap();
 }
 
-loadMap() {
+ loadMap() {
+    this.mapElement = document.getElementById('map');
+    this.map = this.googleMaps.create(this.mapElement, this.mapOptions);
+
+    this.map.one(GoogleMapsEvent.MAP_READY)
+      .then(() => this.map.addMarker({
+          title: 'BTL Marketing',
+          icon: 'blue',
+          animation: 'DROP',
+          position: new LatLng(43.0741904,-89.3809802)
+        })
+        .then(marker => {
+          marker.on(GoogleMapsEvent.MARKER_CLICK)
+            .subscribe(() => {
+              alert('clicked');
+            });
+
+        }))
+  }
+
+loadMap2() {
  // make sure to create following structure in your view.html file
  // and add a height (for example 100%) to it, else the map won't be visible
  // <ion-content>
